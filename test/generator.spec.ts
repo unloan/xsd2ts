@@ -119,7 +119,7 @@ describe("generator", () => {
     compile("./src/generated/targetnamespace.ts");
   });
 
-  it("creates FMS-ApplicationBatchRequest-1_0.ts", () => {
+  fit("creates FMS-ApplicationBatchRequest-1_0.ts", () => {
     expect(
       generateTemplateClassesFromXSD(
         "./test/xsd/FMS-ApplicationBatchRequest-1_0.xsd"
