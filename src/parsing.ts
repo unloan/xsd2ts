@@ -178,10 +178,7 @@ export class ASTClass extends ASTNode {
     constructor(n: Node) {
         super ("Class");
         this.addName(n);
-    }
-
-    get nodeType(){
-        return 'Class;';
+        this.nodeType = 'Class;';
     }
 
 }
