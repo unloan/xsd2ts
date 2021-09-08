@@ -1,0 +1,15 @@
+diff --git a/node_modules/ts-code-generator/ts-code-generator.d.ts b/node_modules/ts-code-generator/ts-code-generator.d.ts
+index 94a4daa..c0d54fc 100644
+--- a/node_modules/ts-code-generator/ts-code-generator.d.ts
++++ b/node_modules/ts-code-generator/ts-code-generator.d.ts
+@@ -1148,8 +1148,8 @@ export abstract class DocumentationedBinder {
+ }
+ 
+ export abstract class ModuledBinder {
+-    abstract getMembers(): definitions.NodeDefinitions[];
+-    bind(def: ModuledDefinitions, handleCustomDefinition?: undefined | ((def: definitions.NodeDefinitions) => void)): void;
++    abstract getMembers(): NodeDefinitions[];
++    bind(def: ModuledDefinitions, handleCustomDefinition?: undefined | ((def: NodeDefinitions) => void)): void;
+ }
+ 
+ export abstract class NamedBinder {

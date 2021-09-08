@@ -10,7 +10,9 @@
     "compile-gen": "tsc -p ./src/generated --outDir ./compiled",
     "version": "npm version patch",
     "setup": "npm install",
-    "deploy": "npm run compile && npm publish"
+    "deploy": "npm run compile && npm publish",
+    "clean": "rm -rf ./node_modules",
+    "postinstall": "patch-package"
   },
   "author": "Eddy Spreeuwers",
   "license": "UNLICENSED",
@@ -35,6 +37,7 @@
     "jasmine": "^3.5.0",
     "jasmine-core": "2.6.2",
     "jasmine-ts": "0.2.0",
+    "patch-package": "^6.4.7",
     "tslint": "^5.20.1"
   }
 }
