@@ -3,9 +3,11 @@
  */
 import {
   ClassDefinition,
+  ClassPropertyDefinition,
   createFile,
   EnumDefinition,
   FileDefinition,
+  TypeDefinition,
 } from "ts-code-generator";
 import { DOMParser } from "xmldom-reborn";
 import { ASTNode, getFieldType, NEWLINE } from "./parsing";
@@ -524,6 +526,13 @@ export class ClassGenerator {
           classDef.methods = c.methods;
           classDef.isExported = true;
           classDef.isAbstract = c.isAbstract;
+          let classProperty = new ClassPropertyDefinition();
+          classProperty.name = `["@class"]`;
+          classProperty.isReadonly = true;
+          let stringTypedef = new TypeDefinition();
+          stringTypedef.text = "string";
+          classProperty.type = stringTypedef;
+          this.addProtectedPropToClass(classDef, classProperty);
           c.extendsTypes.forEach((t) => classDef.addExtends(t.text));
           c.getPropertiesAndConstructorParameters().forEach((prop) => {
             const ct = sortedClasses.filter(
@@ -598,6 +607,10 @@ export class ClassGenerator {
          */
         const isOptional = prop.name.indexOf("?") >= 0;
         const propName = prop.name.replace("?", "");
+        if (propName === `["@class"]`) {
+          // Skip @class property, already assigned.
+          return;
+        }
         console.log({ label: "makeConstructor()", prop, propName });
         if (outFile.getClass(prop.type.text) != null) {
           codeLines.push(
