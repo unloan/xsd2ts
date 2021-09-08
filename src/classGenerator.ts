@@ -153,8 +153,10 @@ function addClassForASTNode(
           returnType: "void",
           scope: "protected",
         });
+        console.log({ attr: m.attr });
         method.addParameter({
           name: "arg",
+          // For redundant class, this should return the existing class instead of a new ref.
           type: m.attr.fieldType || capfirst(m.attr.ref),
         });
         method.onWriteFunctionBody = (w) => {
@@ -567,6 +569,10 @@ export class ClassGenerator {
     log("ready");
     log("redundantArrayClasses", redundantArrayClasses);
     outFile.classes = outFile.classes.filter(
+      // @assumption: Asset and OtherAsset are filtered out here, that's why we don't get the class back
+      // That assumption is true, but we're not supposed to use redundant class,
+      // e.g. for HomePhone element, it's a sequence of Phone, instead of making another class for HomePhone
+      // we can just use array of Phone instead.
       (c) => redundantArrayClasses.indexOf(c.name) < 0
     );
     log(
@@ -611,7 +617,14 @@ export class ClassGenerator {
           // Skip @class property, already assigned.
           return;
         }
-        console.log({ label: "makeConstructor()", prop, propName });
+        if (propName === "Asset" || propName === "OtherAsset") {
+          console.log({
+            label: "makeConstructor()",
+            prop,
+            propName,
+            class: outFile.getClass(prop.type.text),
+          });
+        }
         if (outFile.getClass(prop.type.text) != null) {
           codeLines.push(
             isOptional

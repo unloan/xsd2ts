@@ -125,7 +125,7 @@ describe("generator", () => {
         "./test/xsd/FMS-ApplicationBatchRequest-1_0.xsd"
       )
     );
-    printFile("./src/generated/FMS-ApplicationBatchRequest-1_0.ts");
+    // printFile("./src/generated/FMS-ApplicationBatchRequest-1_0.ts");
     compile("./src/generated/FMS-ApplicationBatchRequest-1_0.ts");
   });
 });
