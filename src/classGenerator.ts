@@ -576,7 +576,7 @@ export class ClassGenerator {
   ) {
     const constructor = classDef.addMethod({ name: "constructor" });
     constructor.scope = "protected";
-    constructor.addParameter({ name: "props?", type: c.name });
+    constructor.addParameter({ name: "props", type: c.name });
     constructor.onWriteFunctionBody = (writer) => {
       if (c.extendsTypes.length) {
         //writer.write('//' + JSON.stringify(c.extendsTypes[0].text) + '\n');
@@ -592,10 +592,18 @@ export class ClassGenerator {
       writer.write(`this["@class"] = "${this.classPrefix}${c.name}";\n`);
       const codeLines = [];
       classDef.getPropertiesAndConstructorParameters().forEach((prop) => {
+        /**
+         * This is kinda hacky, we detect the ? in the property name to determine whether it's optional or not.
+         * This is because prop.isOptional is always false even when the property is optional.
+         */
+        const isOptional = prop.name.indexOf("?") >= 0;
         const propName = prop.name.replace("?", "");
+        console.log({ label: "makeConstructor()", prop, propName });
         if (outFile.getClass(prop.type.text) != null) {
           codeLines.push(
-            `\tthis.${propName} = (props.${propName}) ? new ${prop.type.text}(props.${propName}): undefined;`
+            isOptional
+              ? `\tthis.${propName} = (props.${propName}) ? new ${prop.type.text}(props.${propName}): undefined;`
+              : `\tthis.${propName} = new ${prop.type.text}(props.${propName});`
           );
         } else if (prop.type.text.indexOf("[]") >= 0) {
           const arrayType = prop.type.text.replace("[]", "");
@@ -609,9 +617,7 @@ export class ClassGenerator {
         }
       });
       if (codeLines.length > 0) {
-        writer.write("\nif (props) {\n");
         writer.write(codeLines.join("\n"));
-        writer.write("\n}");
       }
     };
   }
