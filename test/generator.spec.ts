@@ -118,6 +118,16 @@ describe("generator", () => {
     printFile("./src/generated/targetnamespace.ts");
     compile("./src/generated/targetnamespace.ts");
   });
+
+  it("creates FMS-ApplicationBatchRequest-1_0.ts", () => {
+    expect(
+      generateTemplateClassesFromXSD(
+        "./test/xsd/FMS-ApplicationBatchRequest-1_0.xsd"
+      )
+    );
+    printFile("./src/generated/FMS-ApplicationBatchRequest-1_0.ts");
+    compile("./src/generated/FMS-ApplicationBatchRequest-1_0.ts");
+  });
 });
 
 function printFile(fname: string) {
